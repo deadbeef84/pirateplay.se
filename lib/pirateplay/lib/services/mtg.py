@@ -27,13 +27,13 @@ mtg_alt = { 'startvars': { 'suffix-hint': 'flv' },
 						
 mtg_hls = { 'items': [TemplateRequest(
 						re = r'(hls\+?)?(http://)?(www\.)?tv[368]play\.se/.*/(?P<id>\d+).*',
-						encode_vars = lambda v: { 'req_url': 'http://viastream.viasat.tv/MobileStream/%(id)s' % v } ),
+						encode_vars = lambda v: { 'req_url': 'http://playapi.play.mtgx.tv/v3/videos/stream/%(id)s' % v } ),
 					TemplateRequest(
-						re = r'"(?P<req_url>(?P<base>.+/)[^/]+.m3u8)"',
-						encode_vars = lambda v: { 'req_url': v['req_url'].replace('\\', ''), 'base': v['base'].replace('\\', '') } ),
+						re = r'"hls":\s*"(?P<req_url>[^"]+?)"',
+						encode_vars = lambda v: { 'req_url': v['req_url'].replace('\\', '') } ),
 					TemplateRequest(
-						re = r'BANDWIDTH=(?P<bitrate>\d+)\n(?P<url>[^\n]+)',
-						encode_vars = lambda v: { 'final_url': '%(base)s%(url)s' % v,
+						re = r'BANDWIDTH=(?P<bitrate>\d+).*?\n(?P<url>[^\n]+)',
+						encode_vars = lambda v: { 'final_url': '%(url)s' % v,
 													'quality': '%s kbps' % (str(int(v['bitrate'])/1000)),
 													'suffix-hint': 'mp4' })] }
 
